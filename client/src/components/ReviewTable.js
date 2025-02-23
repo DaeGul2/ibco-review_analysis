@@ -25,8 +25,8 @@ const ReviewTable = ({ reviews, isLoading }) => {
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>리뷰</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>판단결과 (1~5)</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>비고</th>
-              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>미래고객 가능성</th>
-              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기존고객</th>
+              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기관 호감도</th>
+              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기존 지원여부</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>장점</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>단점</th>
             </tr>

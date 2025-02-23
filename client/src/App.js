@@ -34,7 +34,7 @@ function App() {
 
   return (
     <div style={{ width: "90%", margin: "0 auto", padding: "20px" }}>
-      <h1 style={{ textAlign: "center", fontSize: "24px", marginBottom: "20px" }}>GPT-4o 리뷰 분석기</h1>
+      <h1 style={{ textAlign: "center", fontSize: "24px", marginBottom: "20px" }}>(주)인사바른 채용후기 분석기</h1>
 
       {/* 파일 업로드 및 입력 */}
       <FileUpload onFileProcessed={(data) => handleFileProcessed(data)} />
