@@ -1,6 +1,12 @@
 import LoadingDots from "./LoadingDots";
 
 const ReviewTable = ({ reviews, isLoading }) => {
+  const formatValue = (value) => {
+    if (!value || (Array.isArray(value) && value.length === 0)) return "-"; // null, undefined, 빈 배열 처리
+    return Array.isArray(value) ? value.join(", ") : value; // 배열이면 join(), 문자열이면 그대로 출력
+  };
+
+
   return (
     <div style={{ width: "100%", padding: "20px", overflowX: "auto" }}>
       {isLoading && <LoadingDots />}
@@ -29,23 +35,23 @@ const ReviewTable = ({ reviews, isLoading }) => {
             {reviews.map((item, index) => (
               <tr key={index} style={{ height: "35px", backgroundColor: index % 2 === 0 ? "#ffffff" : "#f1f3f5" }}>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left" }}>
-                  {item.리뷰.length > 100 ? `${item.리뷰.slice(0, 100)}...` : item.리뷰}
+                  {formatValue(item.리뷰).length > 100 ? `${formatValue(item.리뷰).slice(0, 100)}...` : formatValue(item.리뷰)}
                 </td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", fontWeight: "bold", color: "#28a745" }}>
-                  {item.판단결과}
+                  {formatValue(item.판단결과)}
                 </td>
-                <td style={{ border: "1px solid #dee2e6", padding: "10px" }}>{item.비고 || "-"}</td>
+                <td style={{ border: "1px solid #dee2e6", padding: "10px" }}>{formatValue(item.비고)}</td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", fontWeight: "bold", color: "#17a2b8" }}>
-                  {item.미래고객가능성}
+                  {formatValue(item.호감도)}
                 </td>
-                <td style={{ border: "1px solid #dee2e6", padding: "10px", fontWeight: "bold", color: item.기존고객 === 1 ? "#007bff" : "#dc3545" }}>
-                  {item.기존고객 === 1 ? "기존 고객" : "신규 고객"}
+                <td style={{ border: "1px solid #dee2e6", padding: "10px", fontWeight: "bold", color: item.기존지원자 === 1 ? "#007bff" : "#dc3545" }}>
+                  {formatValue(item.기존지원자) === "1" ? "기존 지원자" : "신규 지원자"}
                 </td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left" }}>
-                  {item.장점?.length > 0 ? item.장점.join(", ") : "-"}
+                  {formatValue(item.장점)}
                 </td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left", color: "#dc3545" }}>
-                  {item.단점?.length > 0 ? item.단점.join(", ") : "-"}
+                  {formatValue(item.단점)}
                 </td>
               </tr>
             ))}
