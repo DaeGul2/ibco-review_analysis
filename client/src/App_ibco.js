@@ -27,7 +27,8 @@ function App() {
       요청: review.요청?.length > 0 ? review.요청.join(", ") : "-", 
       각질:review.각질,
       비듬:review.비듬,
-      포장:review.포장
+      포장:review.포장,
+      사용자: review.사용자?.length > 0 ? review.사용자.join(", ") : "-", 
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
