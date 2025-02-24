@@ -20,10 +20,11 @@ function App() {
       리뷰: review.리뷰,
       판단결과: review.판단결과,
       비고: review.비고 || "-",
-      미래고객가능성: review.호감도,
-      기존고객: review.기존지원자 === 1 ? "기존 지원자" : "첫 지원자",
+      미래고객가능성: review.미래고객가능성,
+      기존고객: review.기존고객 === 1 ? "기존 고객" : "신규 고객",
       장점: review.장점?.length > 0 ? review.장점.join(", ") : "-", // 배열을 문자열로 변환
       단점: review.단점?.length > 0 ? review.단점.join(", ") : "-", // 배열을 문자열로 변환
+      요청: review.요청?.length > 0 ? review.요청.join(", ") : "-", 
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
