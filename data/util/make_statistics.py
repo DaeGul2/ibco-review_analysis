@@ -43,6 +43,6 @@ for row in dataframe_to_rows(disadvantages, index=False, header=True):
 
 
 # 엑셀 파일 저장
-wb.save('한국승강기안전공단_통계.xlsx')
+wb.save('한국예술인복지재단_통계.xlsx')
 
 print("✅ 통계 및 차트 생성 완료!")
