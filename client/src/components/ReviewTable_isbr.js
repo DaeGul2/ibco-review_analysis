@@ -29,6 +29,7 @@ const ReviewTable = ({ reviews, isLoading }) => {
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기존 지원여부</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>장점</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>단점</th>
+              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>요청</th>
             </tr>
           </thead>
           <tbody>
@@ -52,6 +53,9 @@ const ReviewTable = ({ reviews, isLoading }) => {
                 </td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left", color: "#dc3545" }}>
                   {formatValue(item.단점)}
+                </td>
+                <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left", color: "#dc3545" }}>
+                  {formatValue(item.요청)}
                 </td>
               </tr>
             ))}
