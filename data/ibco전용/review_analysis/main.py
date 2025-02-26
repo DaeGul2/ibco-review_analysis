@@ -1,7 +1,7 @@
 import pandas as pd
 
 # 파일 로드
-df = pd.read_excel('fianl_analysis_target_rawdata_working.xlsx')
+df = pd.read_excel('./mapped_category_without_multiple_product.xlsx')
 
 # '-' 값을 '모르겠음'으로 치환
 df['사용자'] = df['사용자'].replace('-', '모르겠음')
