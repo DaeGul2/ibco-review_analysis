@@ -18,12 +18,8 @@ function App() {
   const handleDownloadExcel = () => {
     const formattedData = reviews.map((review) => ({
       리뷰: review.리뷰,
-      칭찬: Array.isArray(review.칭찬)? review.칭찬.join(", ")
-        : review.칭찬 || "-",
-
-      불편함: Array.isArray(review.불편함)? review.불편함.join(", ")
-        : review.불편함 || "-",
-
+      칭찬: review.칭찬?.length > 0 ? review.칭찬.join(", ") : "-", // 배열을 문자열로 변환
+      불편함: review.불편함?.length > 0 ? review.불편함.join(", ") : "-", // 배열을 문자열로 변환
       요청: review.요청?.length ? review.요청.join(", ") : "-",
     }));
 

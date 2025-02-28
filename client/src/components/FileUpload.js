@@ -5,6 +5,7 @@ const FileUpload = ({ onFileProcessed }) => {
   const [file, setFile] = useState(null);
   const [keyword, setKeyword] = useState("");
   const [password, setPassword] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
@@ -14,7 +15,7 @@ const FileUpload = ({ onFileProcessed }) => {
       return;
     }
 
-    const response = await uploadFile(file, keyword, password);
+    const response = await uploadFile(file, keyword, password, category);
     if (response.success) {
       onFileProcessed(response.data);
     } else {
@@ -91,6 +92,26 @@ const FileUpload = ({ onFileProcessed }) => {
           placeholder="비밀번호 입력" 
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
+          style={{
+            width: "100%",
+            padding: "10px",
+            border: "1px solid #ced4da",
+            borderRadius: "5px",
+            backgroundColor: "#ffffff"
+          }}
+        />
+      </div>
+
+      {/* 카테고리 입력 */}
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px", color: "#495057" }}>
+          카테고리 입력(필요한 경우)
+        </label>
+        <input 
+          type="text" 
+          placeholder="카테고리 입력(필요한 경우)" 
+          value={category} 
+          onChange={(e) => setCategory(e.target.value)} 
           style={{
             width: "100%",
             padding: "10px",
