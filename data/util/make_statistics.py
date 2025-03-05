@@ -6,7 +6,7 @@ from openpyxl.chart.label import DataLabelList
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 # 엑셀 파일 불러오기
-df = pd.read_excel('input.xlsx')
+df = pd.read_excel('한국전기안전공사_gpt분석결과.xlsx')
 
 # '장점'과 '단점' 컬럼의 데이터 정제
 def clean_and_split(data):
