@@ -6,7 +6,7 @@ from openpyxl.chart.label import DataLabelList
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 # 엑셀 파일 불러오기
-df = pd.read_excel('한국전기안전공사_gpt분석결과.xlsx')
+df = pd.read_excel('국가철도공단_gpt분석.xlsx')
 
 # '장점'과 '단점' 컬럼의 데이터 정제
 def clean_and_split(data):
@@ -43,6 +43,6 @@ for row in dataframe_to_rows(disadvantages, index=False, header=True):
 
 
 # 엑셀 파일 저장
-wb.save('한국예술인복지재단_통계.xlsx')
+wb.save('국가철도공단_통계.xlsx')
 
 print("✅ 통계 및 차트 생성 완료!")
