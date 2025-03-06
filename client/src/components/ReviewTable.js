@@ -23,13 +23,12 @@ const ReviewTable = ({ reviews, isLoading }) => {
           <thead>
             <tr style={{ backgroundColor: "#007bff", color: "white", height: "40px" }}>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>리뷰</th>
-              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>판단결과 (1~5)</th>
+              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>판단결과 (1 or 0)</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>비고</th>
-              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기관 호감도</th>
-              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기존 지원여부</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>장점</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>단점</th>
               <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>요청</th>
+              <th style={{ border: "1px solid #dee2e6", padding: "10px" }}>기관인상</th>
             </tr>
           </thead>
           <tbody>
@@ -42,12 +41,7 @@ const ReviewTable = ({ reviews, isLoading }) => {
                   {formatValue(item.판단결과)}
                 </td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px" }}>{formatValue(item.비고)}</td>
-                <td style={{ border: "1px solid #dee2e6", padding: "10px", fontWeight: "bold", color: "#17a2b8" }}>
-                  {formatValue(item.호감도)}
-                </td>
-                <td style={{ border: "1px solid #dee2e6", padding: "10px", fontWeight: "bold", color: item.기존지원자 === 1 ? "#007bff" : "#dc3545" }}>
-                  {formatValue(item.기존지원자) === "1" ? "기존 지원자" : "신규 지원자"}
-                </td>
+               
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left" }}>
                   {formatValue(item.장점)}
                 </td>
@@ -56,6 +50,9 @@ const ReviewTable = ({ reviews, isLoading }) => {
                 </td>
                 <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left", color: "#dc3545" }}>
                   {formatValue(item.요청)}
+                </td>
+                <td style={{ border: "1px solid #dee2e6", padding: "10px", textAlign: "left" }}>
+                  {formatValue(item.기관인상)}
                 </td>
               </tr>
             ))}
