@@ -1,5 +1,5 @@
 const express = require("express");
-const { processReviews } = require("../controllers/reviewController");
+const  reviewController = require("../controllers/reviewController");
 const multer = require("multer");
 
 // 업로드 폴더 및 파일 저장 설정
@@ -12,6 +12,8 @@ const upload = multer({ storage });
 
 const router = express.Router();
 
-router.post("/upload", upload.single("file"), processReviews);
+router.post("/init", reviewController.initPassword);
+router.post("/analyzeBatch", reviewController.analyzeBatchPrompts);
+
 
 module.exports = router;
