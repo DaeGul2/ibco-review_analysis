@@ -51,7 +51,8 @@ const FileUpload = ({ onFileProcessed }) => {
   const generatePrompt = (row) => {
     const mainValue = row[mainColumn] || "";
     let prompt = "너는 공공기관 면접 후기 데이터를 분석하는 AI야.\n\n";
-    prompt += `● 분석대상 컬럼: "${mainColumn}"의 값은 "${mainValue}"\n`;
+    prompt += `● 분석대상 텍스트 : "${mainValue}"\n`;
+  
     if (refColumns && refColumns.length > 0) {
       prompt += "● 참고대상 컬럼:\n";
       refColumns.forEach((col) => {
@@ -59,36 +60,45 @@ const FileUpload = ({ onFileProcessed }) => {
         prompt += `   - ${col}: "${refVal}"\n`;
       });
     }
+  
     prompt += "\n아래는 분석 요청(ruleSet) 항목들이다. 각 항목의 제목은 분석 결과에 반드시 포함되어야 한다.\n";
+  
     ruleSet.forEach((rule, idx) => {
       prompt += `[${idx + 1}] 요청 주제: ${rule.key || "(제목 미입력)"}\n`;
       prompt += `    주제 설명: ${rule.description || "(설명 미입력)"}\n`;
       prompt += `    분석 방식: ${rule.type}\n`;
+  
       if (rule.type === "카테고리화" && rule.categories && rule.categories.length > 0) {
-        prompt += "    카테고리 목록(복수선택하여 배열로):\n";
+        prompt += "    카테고리 목록(아래 속성 중 복수선택하여 오직 배열로만):\n";
         rule.categories.forEach(cat => {
-          prompt += `      - ${cat.name}: ${cat.description}\n`;
+          prompt += `      - ${cat.name}: ${cat.description || ""}\n`;
         });
       }
-      prompt += "\n";
     });
-    prompt += "최종 응답은 아래 JSON 구조로 출력해줘:\n\n";
-    prompt += `{
-    "분석대상": "${mainValue}"`;
+  
+    prompt += "\n각 분석 요청 방식에 따라, key-value에 맞춰 줄글이면 줄글로, 카테고리면 배열로 응답해줘.\n";
+    prompt += "기타 설명이나 텍스트는 생략하고, 반드시 아래 형식의 JSON으로만 출력해줘.\n\n";
+  
+    prompt += "{\n";
     if (refColumns && refColumns.length > 0) {
-      prompt += `,
-    "참고대상": {`;
+      prompt += `  "참고대상": {\n`;
       refColumns.forEach((col, idx) => {
-        prompt += `\n    "${col}": "${row[col] || ""}"${idx < refColumns.length - 1 ? "," : ""}`;
+        prompt += `    "${col}": "${row[col] || ""}"${idx < refColumns.length - 1 ? "," : ""}\n`;
       });
-      prompt += "\n  },";
+      prompt += `  },\n`;
     }
-    prompt += `
-    "분석결과": {`;
+  
+    prompt += `  "분석결과": {\n`;
     ruleSet.forEach((rule, idx) => {
-      prompt += `\n    "${rule.key || "요청" + (idx + 1)}": "<분석 결과>"${idx < ruleSet.length - 1 ? "," : ""}`;
+      const isLast = idx === ruleSet.length - 1;
+      if (rule.type === "카테고리화" && rule.categories && rule.categories.length > 0) {
+        const categoryNames = rule.categories.map(cat => `"${cat.name}"`);
+        prompt += `    "${rule.key || "요청" + (idx + 1)}": [${categoryNames.join(", ")}]${isLast ? "" : ","}\n`;
+      } else {
+        prompt += `    "${rule.key || "요청" + (idx + 1)}": "내용"${isLast ? "" : ","}\n`;
+      }
     });
-    prompt += "\n  }\n}";
+    prompt += "  }\n}";
     
     return prompt;
   };

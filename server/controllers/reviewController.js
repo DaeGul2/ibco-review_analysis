@@ -39,6 +39,7 @@ exports.analyzeBatchPrompts = async (req, res) => {
           try {
             // 깔끔한 JSON 문자열이면 JSON 파싱을 시도
             const parsed = JSON.parse(content);
+            console.log("parsed : ",parsed)
             return parsed;
           } catch (e) {
             console.error("JSON 파싱 오류:", e);
