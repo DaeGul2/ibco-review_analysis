@@ -106,3 +106,57 @@ PLOT 구성 항목:
     res.status(500).json({ success: false, message: "Step2 GPT 요청 실패" });
   }
 };
+
+exports.reviseStep2Task = async (req, res) => {
+  const { originalResult, reviseTargets } = req.body;
+
+  if (!originalResult || !reviseTargets || !Array.isArray(reviseTargets)) {
+    return res.status(400).json({ success: false, message: "입력값이 부족합니다." });
+  }
+
+  try {
+    const revisedResult = { ...originalResult };
+
+    for (const competency of reviseTargets) {
+      const prompt = `
+당신은 AC 평가 과제개발 전문가입니다.
+다음 역량 [${competency}]에 대해 세부 story, 변별 point, 고성과자/저성과자 기준을 새로 작성해줘.
+
+응답은 반드시 아래 예시처럼 JSON 형식으로:
+
+{
+  "${competency}": {
+    "story": "...",
+    "point": "...",
+    "bars": {
+      "고성과자": "...",
+      "저성과자": "..."
+    }
+  }
+}
+`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [{ role: "user", content: prompt }]
+      });
+
+      let content = completion.choices[0].message.content.trim();
+      if (content.startsWith("```json") || content.startsWith("```")) {
+        content = content.replace(/```json|```/g, "").trim();
+      }
+
+      const parsed = JSON.parse(content);
+      console.log("✅ 수정된 부분:", parsed);
+
+      // 기존 결과에 덮어쓰기
+      revisedResult[competency] = parsed[competency];
+    }
+
+    res.json({ success: true, data: revisedResult });
+
+  } catch (error) {
+    console.error("부분 수정 GPT 에러:", error);
+    res.status(500).json({ success: false, message: "부분 수정 실패" });
+  }
+};

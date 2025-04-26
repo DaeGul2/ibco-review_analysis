@@ -24,3 +24,14 @@ export const generateStep2Task = async (inputData) => {
     return { success: false, data: null };
   }
 };
+
+// ✅ Step2 결과 "부분 수정" 요청
+export const reviseStep2Task = async (inputData) => {
+  try {
+    const response = await axios.post(`${API_URL}/task/reviseStep2`, inputData);
+    return response.data;
+  } catch (error) {
+    console.error("Step2 결과 수정 실패:", error);
+    return { success: false, data: null };
+  }
+};
