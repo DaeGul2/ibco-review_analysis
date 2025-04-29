@@ -4,6 +4,7 @@ import Select from "react-select";
 import { Accordion, Button } from "react-bootstrap";
 import { initPassword, analyzePromptBatch } from "../api/reviewService";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { sendLog } from "isbr_util"; // ✅ sendLog import 추가
 
 const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
   const [file, setFile] = useState(null);
@@ -38,7 +39,7 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
     const mainValue = row[mainColumn] || "";
     let prompt = "너는 공공기관 면접 후기 데이터를 분석하는 AI야.\n\n";
     prompt += `● 분석대상 텍스트 : "${mainValue}"\n`;
-  
+
     if (refColumns && refColumns.length > 0) {
       prompt += "● 참고대상 컬럼:\n";
       refColumns.forEach((col) => {
@@ -46,14 +47,14 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
         prompt += `   - ${col}: "${refVal}"\n`;
       });
     }
-  
+
     prompt += "\n아래는 분석 요청(ruleSet) 항목들이다. 각 항목의 제목은 분석 결과에 반드시 포함되어야 한다.\n";
-  
+
     ruleSet.forEach((rule, idx) => {
       prompt += `[${idx + 1}] 요청 주제: ${rule.key || "(제목 미입력)"}\n`;
       prompt += `    주제 설명: ${rule.description || "(설명 미입력)"}\n`;
       prompt += `    분석 방식: ${rule.type}\n`;
-  
+
       if (rule.type === "카테고리화" && rule.categories && rule.categories.length > 0) {
         prompt += "    카테고리 목록(아래 속성 중 복수선택하여 오직 배열로만):\n";
         rule.categories.forEach(cat => {
@@ -61,10 +62,10 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
         });
       }
     });
-  
+
     prompt += "\n각 분석 요청 방식에 따라, key-value에 맞춰 줄글이면 줄글로, 카테고리면 배열로 응답해줘.\n";
     prompt += "기타 설명이나 텍스트는 생략하고, 반드시 아래 형식의 JSON으로만 출력해줘.\n\n";
-  
+
     prompt += "{\n";
     if (refColumns && refColumns.length > 0) {
       prompt += `  "참고대상": {\n`;
@@ -73,7 +74,7 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
       });
       prompt += `  },\n`;
     }
-  
+
     prompt += `  "분석결과": {\n`;
     ruleSet.forEach((rule, idx) => {
       const isLast = idx === ruleSet.length - 1;
@@ -85,7 +86,7 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
       }
     });
     prompt += "  }\n}";
-    
+
     return prompt;
   };
   const generatePromptPreview = () => {
@@ -125,6 +126,20 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
       if (res.success && Array.isArray(res.data)) results.push(...res.data);
     }
 
+    try {
+      await sendLog({
+        appName: "텍스트분석기",
+        functionName: "handleUpload",
+        userName: "민태희",
+        extra: {
+          people_count: enriched.length, // 총 인원 수
+          ruleSet: ruleSet               // 현재 설정된 ruleSet 전체
+        }
+      });
+      console.log("✅ 로그 전송 완료");
+    } catch (logError) {
+      console.error("❌ 로그 전송 실패:", logError);
+    }
     onFileProcessed(results);
   };
 

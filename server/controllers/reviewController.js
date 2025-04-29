@@ -17,8 +17,11 @@ exports.analyzeBatchPrompts = async (req, res) => {
     return res.status(400).json({ success: false, message: "prompts 배열이 필요합니다." });
   }
   console.log(prompts);
+
   const batchSize = 10;
   const allPromises = [];
+
+  let status = 1; // 기본 성공
 
   for (let i = 0; i < prompts.length; i += batchSize) {
     const batch = prompts.slice(i, i + batchSize);
@@ -30,24 +33,24 @@ exports.analyzeBatchPrompts = async (req, res) => {
         })
         .then(response => {
           let content = response.choices[0].message.content.trim();
-          // 코드 블록 제거: 시작 부분이 "```json" 또는 "```"이면 해당 태그들을 제거
           if (content.startsWith("```json")) {
             content = content.replace(/```json|```/g, "").trim();
           } else if (content.startsWith("```")) {
             content = content.replace(/```/g, "").trim();
           }
           try {
-            // 깔끔한 JSON 문자열이면 JSON 파싱을 시도
             const parsed = JSON.parse(content);
-            console.log("parsed : ",parsed)
+            console.log("parsed : ", parsed);
             return parsed;
           } catch (e) {
             console.error("JSON 파싱 오류:", e);
+            status = 0; // 파싱 오류 있으면 전체 실패로 간주
             return null;
           }
         })
         .catch(err => {
           console.error("GPT 응답 실패:", err);
+          status = 0; // GPT 통신 실패 있으면 전체 실패
           return null;
         })
       )
@@ -55,10 +58,14 @@ exports.analyzeBatchPrompts = async (req, res) => {
     allPromises.push(batchPromise);
   }
 
+  // 모든 GPT 호출 완료
   const allResults = await Promise.allSettled(allPromises);
   const flatResponses = allResults.flatMap(r =>
     r.status === "fulfilled" ? r.value.filter(response => response !== null) : []
   );
+
+  // ✅ 전체 끝난 후에 한 번만 로그 전송
+  
 
   res.json({ success: true, data: flatResponses });
 };
