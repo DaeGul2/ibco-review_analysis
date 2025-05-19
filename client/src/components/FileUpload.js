@@ -14,6 +14,7 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
   const [mainColumn, setMainColumn] = useState("");
   const [refColumns, setRefColumns] = useState([]);
   const [ruleSet, setRuleSet] = useState([]);
+  const [gptRole, setGptRole] = useState("너는 공공기관 면접 후기 데이터를 분석하는 AI야.");
 
   const handleExcelRead = (file) => {
     const reader = new FileReader();
@@ -37,7 +38,7 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
 
   const generatePrompt = (row) => {
     const mainValue = row[mainColumn] || "";
-    let prompt = "너는 공공기관 면접 후기 데이터를 분석하는 AI야.\n\n";
+    let prompt = (gptRole?.trim() || "너는 텍스트 분석 전문가야.") + "\n\n";
     prompt += `● 분석대상 텍스트 : "${mainValue}"\n`;
 
     if (refColumns && refColumns.length > 0) {
@@ -209,6 +210,17 @@ const FileUpload = ({ onFileProcessed, onRawDataLoaded, setIsLoading }) => {
         onChange={(e) => setPassword(e.target.value)}
         className="form-control mb-3"
       />
+      <div className="mb-3">
+        <label>GPT 역할 부여</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder='예: "너는 공공기관 면접 후기 데이터를 분석하는 AI야."'
+          value={gptRole}
+          onChange={(e) => setGptRole(e.target.value)}
+        />
+      </div>
+
 
       <div style={{ marginBottom: "20px", padding: "10px", border: "1px dashed #ced4da" }}>
         <h5>분석 요청 설정 (RuleSet)</h5>
