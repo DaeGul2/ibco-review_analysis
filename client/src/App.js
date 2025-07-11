@@ -5,14 +5,14 @@ import FileUpload from "./components/FileUpload";
 import ReviewTable from "./components/ReviewTable";
 import LoadingDots from "./components/LoadingDots";
 import TaskGeneratePage from "./components/TaskGeneratePage"; // 아까 만든 페이지
-
+import DetailedAnalysisModal from "./components/DetailedAnalysisModal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [rawData, setRawData] = useState([]);
   const [analysisResults, setAnalysisResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
   const handleFileProcessed = (results) => {
     setAnalysisResults(results);
     setIsLoading(false);
@@ -64,6 +64,11 @@ function App() {
           <Route path="/task" element={<TaskGeneratePage />} />
         </Routes>
       </div>
+      <button className="btn btn-secondary mb-3" onClick={() => setShowModal(true)}>
+        결과 상세 분석
+      </button>
+
+      <DetailedAnalysisModal show={showModal} onClose={() => setShowModal(false)} />
     </Router>
   );
 }
